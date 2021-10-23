@@ -29,6 +29,21 @@ public class Window extends JPanel {
         frame.setBackground(color.from(memory.peek((short)0)));
     }
 
+    /**
+     * Returns the amount of columns this Window has
+     * @return int
+     */
+    public int getColumns() {
+        return columns;
+    }
+
+    /**
+     * Returns the amount of lines this Window has
+     * @return int
+     */
+    public int getLines() {
+        return lines;
+    }
 
     /**
      * Writes a string starting at the provided line and column with the default foreground and background colors
