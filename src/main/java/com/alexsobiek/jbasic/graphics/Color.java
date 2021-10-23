@@ -11,11 +11,11 @@ package com.alexsobiek.jbasic.graphics;
  */
 public class Color {
     public static void main(String[] args) {
-        // System.out.println(toByte(255, 255, 255) & 0xFF);
-        // System.out.println(Integer.toString(toInt(255, 255, 255), 2));
-        int c = toByte(7, 223, 95) & 0xFF; // 95 = 01011111, 223 = 11011111
-        // System.out.println(Integer.toBinaryString(c)); // 01011001
-        // System.out.println(from(144));
+        byte a = toByte(0xb2, 0x66, 0xFF); // 178, 102, 255
+        System.out.println(from(a)); // 160, 96, 192
+
+        byte b = toByte(0x97, 0xC0, 0x60); // 151, 102, 96
+        System.out.println(from(b)); // 255, 192, 64
     }
 
     /**
@@ -29,22 +29,18 @@ public class Color {
         return (byte) (((r >> 5) << 5) | ((g >> 5) << 2) | (b >> 6));
     }
 
+
     /**
      * Converts 8-bit color integer into java.awt.Color object
      * @param rgb 8-bit color
      * @return java.awt.Color
      */
     public static java.awt.Color from(int rgb) {
-        /**
-         * Java Color is 24 bit, so we have to take the first 3 bits of R and B, first two bits of g, and pad them each
-         *   R      G     B
-         * 1 1 1  1 1 1  1 1
-         * R = ((rgb  >> 5) << 21) | (0x1F << 16)
-         * G = (((rgb >> 2) << 29) >>> 16) | (0x1F << 8)
-         * B = (((rgb << 30)) >>> 24) | 0x3F
-         */
-        rgb = (((rgb  >> 5) << 21) | (0x1F << 16) | (((rgb >> 2) << 29) >>> 16) | (0x1F << 8) | (((rgb << 30)) >>> 24) | 0x3F);
-        System.out.println(Integer.toHexString(rgb));
+        rgb = rgb << 24;
+        int r = (rgb >> 29) << 29;
+        int g = (((rgb << 3) >> 29) << 21);
+        int b = (((rgb << 6)) >>> 16);
+        rgb = (r | g | b) >>> 8;
         return new java.awt.Color(rgb);
     }
 
