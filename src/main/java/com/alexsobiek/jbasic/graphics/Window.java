@@ -88,10 +88,12 @@ public class Window extends JPanel {
      */
     public void writeChar(int line, int column, char character, int foreground, int background) {
         if (line < lines && column < columns) {
-            int address = 2 + (120*line) + (3*column);
-            memory.poke((short)address, (byte)character);
-            memory.poke((short)(address+1), (byte)foreground);
-            memory.poke((short)(address+2), (byte)background);
+            memory.poke((short)2, (byte)line);      // Write the last character line position to memory
+            memory.poke((short)3, (byte)column);    // Write the last character column position to memory
+            int address = 4 + (120*line) + (3*column);
+            memory.poke((short)address, (byte)character);       // Write the character to memory
+            memory.poke((short)(address+1), (byte)foreground);  // Write the character foreground to memory
+            memory.poke((short)(address+2), (byte)background);  // Write the character background to memory
         }
     }
 
@@ -104,10 +106,18 @@ public class Window extends JPanel {
     public char getCharAt(int line, int column) {
         char c = 0x00;
         if (line < this.lines && column < this.columns) {
-            int address = 2 + (120*line) + (3*column);
+            int address = 4 + (120*line) + (3*column);
             c = (char) memory.peek((short)address);
         }
         return c;
+    }
+
+    /**
+     * Returns the line, column position of the last saved char to memory
+     * @return byte[]
+     */
+    public byte[] getLastCharInput() {
+        return new byte[]{memory.peek((short)2), memory.peek((short)3)};
     }
 
     /**
