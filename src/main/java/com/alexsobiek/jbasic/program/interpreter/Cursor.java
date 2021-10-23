@@ -9,7 +9,7 @@ import com.alexsobiek.jbasic.event.events.KeyInputEvent;
 public class Cursor implements Listener {
     private int x = 0, y = 0;
     private byte cycle = 0;
-    private final char cursor = '$';
+
     private final API api;
 
     public Cursor(API api) {
@@ -21,9 +21,9 @@ public class Cursor implements Listener {
         cycle++;
         if (cycle == 2) {
             cycle = 0;
-            api.getWindow().writeChar(x, y, cursor);
+            api.getWindow().setCharColor(x, y, api.getWindow().getBackgroundColor(), api.getWindow().getForegroundColor());
         } else {
-            api.getWindow().writeChar(x, y, ' ');
+            api.getWindow().setCharColor(x, y, api.getWindow().getForegroundColor(), api.getWindow().getBackgroundColor());
         }
     }
 
