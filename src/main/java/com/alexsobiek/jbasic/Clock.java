@@ -11,6 +11,6 @@ public class Clock {
     public Clock(EventBus eventBus) {
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         CPUCycle cycle = new CPUCycle();
-        service.scheduleAtFixedRate(() -> eventBus.post(cycle), 0, 1000, TimeUnit.MILLISECONDS);
+        service.scheduleAtFixedRate(() -> eventBus.post(cycle), 0, 500, TimeUnit.MILLISECONDS);
     }
 }
