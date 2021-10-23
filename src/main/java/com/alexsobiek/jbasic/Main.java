@@ -39,6 +39,9 @@ class JMain implements API {
         io = new IOHandler(eventBus);
     }
 
+    public void loadProgram(Program program) {
+        program.onLoad(this);
+    }
 
     /**
      * Gets the Event Bus class
