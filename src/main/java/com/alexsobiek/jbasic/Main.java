@@ -1,8 +1,12 @@
 package com.alexsobiek.jbasic;
 
 import com.alexsobiek.jbasic.event.EventBus;
+import com.alexsobiek.jbasic.event.EventListener;
+import com.alexsobiek.jbasic.event.Listener;
+import com.alexsobiek.jbasic.event.events.CPUCycle;
 import com.alexsobiek.jbasic.graphics.Window;
 import com.alexsobiek.jbasic.io.IOHandler;
+import com.alexsobiek.jbasic.program.ColorTest;
 
 /**
  * JBasic - A BASIC interpreter and REPL environment
@@ -25,7 +29,7 @@ public class Main {
     }
 }
 
-class JMain implements API {
+class JMain implements API, Listener {
     private final EventBus eventBus;    // Event bus handles posting, subscribing, and unsubscribing from events
     private final Window window;        // Main Window (JPanel) class
     private final IOHandler io;         // Main IO class
@@ -36,7 +40,12 @@ class JMain implements API {
     public JMain() {
         eventBus = new EventBus();
         window = new Window(40, 25);    // Creates new 40x25 column Window
+        window.writeString(0, 0, "Loading Program...");
         io = new IOHandler(eventBus);
+        new Clock(eventBus);
+        eventBus.subscribe(this);
+        window.clearScreen();
+        loadProgram(new ColorTest());
     }
 
     public void loadProgram(Program program) {
