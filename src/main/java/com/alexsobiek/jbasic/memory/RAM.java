@@ -6,7 +6,7 @@ public abstract class RAM extends ROM {
      * @param address Address to store value at
      * @param value Value to store
      */
-    void poke(short address, byte value) {
+    public void poke(short address, byte value) {
         if (address < memory.length) memory[address] = value;
     }
 }

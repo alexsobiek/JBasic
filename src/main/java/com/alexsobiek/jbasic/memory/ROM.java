@@ -8,7 +8,7 @@ public abstract class ROM {
      * @param address Address to pull byte from
      * @return byte
      */
-    byte peek(short address) {
+    public byte peek(short address) {
         return memory[address];
     }
 }
