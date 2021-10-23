@@ -26,7 +26,7 @@ public class Window extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         memory.poke((short)0, (byte)0);     // Default Background Color
         memory.poke((short)1, (byte)255);   // Default Foreground Color
-        frame.setBackground(color.from(memory.peek((short)0)));
+        frame.setBackground(color.from(getBackgroundColor()));
     }
 
     /**
@@ -45,6 +45,27 @@ public class Window extends JPanel {
         return lines;
     }
 
+    public int getBackgroundColor() {
+        return memory.peek((short)0);
+    }
+
+    public int getForegroundColor() {
+        return memory.peek((short)1);
+    }
+
+
+    /**
+     * Modifies the color scheme of the char at line, column
+     * @param line Line number
+     * @param column Column number
+     * @param foreground Foreground color
+     * @param background Background color
+     */
+    public void setCharColor(int line, int column, int foreground, int background) {
+        char c = getCharAt(line, column);
+        writeChar(line, column, c, foreground, background);
+    }
+
     /**
      * Writes a string starting at the provided line and column with the default foreground and background colors
      * @param line Starting line
@@ -52,7 +73,7 @@ public class Window extends JPanel {
      * @param string String to write
      */
     public void writeString(int line, int column, String string) {
-        writeString(line, column, string, memory.peek((short)1), memory.peek((short)0));
+        writeString(line, column, string, getForegroundColor(), getBackgroundColor());
     }
 
     /**
@@ -75,7 +96,7 @@ public class Window extends JPanel {
      * @param character Character to write
      */
     public void writeChar(int line, int column, char character) {
-        writeChar(line, column, character, memory.peek((short)1), memory.peek((short)0));
+        writeChar(line, column, character, getForegroundColor(), getBackgroundColor());
     }
 
     /**
