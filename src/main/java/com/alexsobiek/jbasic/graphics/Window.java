@@ -79,6 +79,24 @@ public class Window extends JPanel {
         }
     }
 
+    /**
+     * Returns the character (if it exists) at the given line & column
+     * @param line Line number
+     * @param column Column number
+     * @return char
+     */
+    public char getCharAt(int line, int column) {
+        char c = 0x00;
+        if (line < this.lines && column < this.columns) {
+            int address = 2 + (120*line) + (3*column);
+            c = (char) memory.peek((short)address);
+        }
+        return c;
+    }
+
+    /**
+     * Clears the screen memory
+     */
     public void clearScreen() {
         for (int i = 0; i < lines; i++) {
             for (int j = 0; j < columns; j++) {
