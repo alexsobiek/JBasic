@@ -1,5 +1,5 @@
 package com.alexsobiek.jbasic;
 
 public interface Program {
-    void onLoad();
+    void onLoad(API api);
 }
