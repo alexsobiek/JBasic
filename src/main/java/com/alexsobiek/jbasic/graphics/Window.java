@@ -23,6 +23,7 @@ public class Window extends JPanel {
         frame.add(this);
         frame.setVisible(true);
         frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         memory.poke((short)0, (byte)0);     // Default Background Color
         memory.poke((short)1, (byte)255);   // Default Foreground Color
         frame.setBackground(color.from(memory.peek((short)0)));
