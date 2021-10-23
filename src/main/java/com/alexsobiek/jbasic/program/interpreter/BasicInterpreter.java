@@ -8,5 +8,6 @@ public class BasicInterpreter implements Program {
     @Override
     public void onLoad(API api) {
         api.getWindow().writeString(0, 0, "BASIC Interpreter");
+        api.getEventBus().subscribe(new Cursor(api));
     }
 }
