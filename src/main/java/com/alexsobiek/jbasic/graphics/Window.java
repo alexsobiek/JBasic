@@ -23,7 +23,9 @@ public class Window extends JPanel {
         frame.add(this);
         frame.setVisible(true);
         frame.setResizable(false);
-        frame.setBackground(java.awt.Color.BLACK);
+        memory.poke((short)0, (byte)0);     // Default Background Color
+        memory.poke((short)1, (byte)255);   // Default Foreground Color
+        frame.setBackground(color.from(memory.peek((short)0)));
     }
 
 
@@ -34,7 +36,7 @@ public class Window extends JPanel {
      * @param string String to write
      */
     public void writeString(int line, int column, String string) {
-        writeString(line, column, string, 255, 0);
+        writeString(line, column, string, memory.peek((short)1), memory.peek((short)0));
     }
 
     /**
@@ -57,7 +59,7 @@ public class Window extends JPanel {
      * @param character Character to write
      */
     public void writeChar(int line, int column, char character) {
-        writeChar(line, column, character, 255, 0);
+        writeChar(line, column, character, memory.peek((short)1), memory.peek((short)0));
     }
 
     /**
@@ -70,7 +72,7 @@ public class Window extends JPanel {
      */
     public void writeChar(int line, int column, char character, int foreground, int background) {
         if (line < lines && column < columns) {
-            int address = (120*line) + (3*column);
+            int address = 2 + (120*line) + (3*column);
             memory.poke((short)address, (byte)character);
             memory.poke((short)(address+1), (byte)foreground);
             memory.poke((short)(address+2), (byte)background);
@@ -95,7 +97,7 @@ public class Window extends JPanel {
         // Video memory lives between 0x80 and 0xC50
         // Each row occupies 75 bytes - character, foreground, background
         byte[] b = new byte[3];
-        int address = (120*line) + (3*column); // each column has 3 bytes, 40 columns, 25 lines
+        int address = 2 + (120*line) + (3*column); // each column has 3 bytes, 40 columns, 25 lines
         for (int i = 0; i < 3; i++) {
             b[i] = memory.peek((short)(address+i));
             // System.out.println((short)(address+i));
