@@ -77,6 +77,14 @@ public class Window extends JPanel {
         }
     }
 
+    public void clearScreen() {
+        for (int i = 0; i < lines; i++) {
+            for (int j = 0; j < columns; j++) {
+                writeChar(i, j, ' ');
+            }
+        }
+    }
+
     /**
      * Gets the character bytes for the provided row and column. Note: row and column start at 0
      * @param line Row number
