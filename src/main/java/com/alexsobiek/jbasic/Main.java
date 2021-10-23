@@ -7,6 +7,7 @@ import com.alexsobiek.jbasic.event.events.CPUCycle;
 import com.alexsobiek.jbasic.graphics.Window;
 import com.alexsobiek.jbasic.io.IOHandler;
 import com.alexsobiek.jbasic.program.ColorTest;
+import com.alexsobiek.jbasic.program.interpreter.BasicInterpreter;
 
 /**
  * JBasic - A BASIC interpreter and REPL environment
@@ -45,7 +46,7 @@ class JMain implements API, Listener {
         new Clock(eventBus);
         eventBus.subscribe(this);
         window.clearScreen();
-        loadProgram(new ColorTest());
+        loadProgram(new BasicInterpreter());
     }
 
     public void loadProgram(Program program) {
