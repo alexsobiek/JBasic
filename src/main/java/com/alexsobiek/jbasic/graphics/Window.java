@@ -172,20 +172,18 @@ public class Window extends JPanel {
 
         for (int i = 0; i < lines; i++) {                   // loop through all lines
             for (int j = 0; j < columns; j++) {             // loop through each column on each line
+                int x = j * 16;         // Each new character moves over by 16px
+                int y = (i + 1) * 18;   // Each new character moves down by 18px
                 byte[] charMem = getCharacterBytes(i, j);
+                // Background rectangle
+                g2d.setColor(color.from(charMem[2]));
+                g.fillRect(x, y - 16, 16, 18);
+                // Character Drawing
                 if (charMem[0] != 0x00) {
                     String s = String.valueOf((char)charMem[0]);
-                    int x = j * 16;         // Each new character moves over by 16px
-                    int y = (i + 1) * 18;   // Each new character moves down by 18px
+                    System.out.println(s);
                     g2d.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14)); // Set the font size
-
-                    // Background rectangle
-                    g2d.setColor(color.from(charMem[2]));
-                    g.fillRect(x, y - 16, 16, 18);
-
-                    // Draw Character
                     g2d.setColor(color.from(charMem[1]));
-
                     /*
                     x coordinate calculation explanation:
                         each character has a width of 16px, so we subtract the width of the character from 16
