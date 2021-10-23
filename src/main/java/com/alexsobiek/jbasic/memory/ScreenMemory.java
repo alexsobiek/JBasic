@@ -13,6 +13,6 @@ public class ScreenMemory extends RAM {
          * Byte 2 - Foreground Color Short
          * Byte 3 - Background Color Short
          */
-        memory = new byte[2+columns*3*rows];
+        memory = new byte[4+columns*3*rows];
     }
 }

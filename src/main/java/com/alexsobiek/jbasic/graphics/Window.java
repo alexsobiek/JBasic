@@ -138,14 +138,10 @@ public class Window extends JPanel {
      * @return byte[3]: character, foreground, background
      */
     private byte[] getCharacterBytes(int line, int column) {
-        // Video memory lives between 0x80 and 0xC50
         // Each row occupies 75 bytes - character, foreground, background
         byte[] b = new byte[3];
-        int address = 2 + (120*line) + (3*column); // each column has 3 bytes, 40 columns, 25 lines
-        for (int i = 0; i < 3; i++) {
-            b[i] = memory.peek((short)(address+i));
-            // System.out.println((short)(address+i));
-        }
+        int address = 4 + (120*line) + (3*column); // each column has 3 bytes
+        for (int i = 0; i < 3; i++) b[i] = memory.peek((short)(address+i));
         return b;
     }
 
@@ -158,7 +154,7 @@ public class Window extends JPanel {
                 byte[] charMem = getCharacterBytes(i, j);
                 if (charMem[0] != 0x00) {
                     String s = String.valueOf((char)charMem[0]);
-                    int x = j * 16;       // Each new character moves over by 16px
+                    int x = j * 16;         // Each new character moves over by 16px
                     int y = (i + 1) * 18;   // Each new character moves down by 18px
                     g2d.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14)); // Set the font size
 
