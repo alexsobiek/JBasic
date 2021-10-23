@@ -43,6 +43,11 @@ class JMain implements API {
         program.onLoad(this);
     }
 
+    @EventListener
+    public void onCPUCycle(CPUCycle cycle) {
+        window.paint(window.getGraphics());
+    }
+
     /**
      * Gets the Event Bus class
      * @return EventBus
