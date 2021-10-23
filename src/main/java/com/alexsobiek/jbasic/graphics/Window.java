@@ -181,7 +181,6 @@ public class Window extends JPanel {
                 // Character Drawing
                 if (charMem[0] != 0x00) {
                     String s = String.valueOf((char)charMem[0]);
-                    System.out.println(s);
                     g2d.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14)); // Set the font size
                     g2d.setColor(color.from(charMem[1]));
                     /*
