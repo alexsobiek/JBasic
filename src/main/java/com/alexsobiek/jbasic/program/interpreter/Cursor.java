@@ -5,9 +5,10 @@ import com.alexsobiek.jbasic.event.EventListener;
 import com.alexsobiek.jbasic.event.Listener;
 import com.alexsobiek.jbasic.event.events.CPUCycle;
 import com.alexsobiek.jbasic.event.events.KeyInputEvent;
+import com.alexsobiek.jbasic.memory.RAM;
 
 public class Cursor implements Listener {
-    private int x = 0, y = 0;
+    private int line = 0, column = 0;
     private byte cycle = 0;
 
     private final API api;
@@ -21,9 +22,9 @@ public class Cursor implements Listener {
         cycle++;
         if (cycle == 2) {
             cycle = 0;
-            api.getWindow().setCharColor(x, y, api.getWindow().getBackgroundColor(), api.getWindow().getForegroundColor());
+            api.getWindow().setCharColor(line, column, api.getWindow().getBackgroundColor(), api.getWindow().getForegroundColor());
         } else {
-            api.getWindow().setCharColor(x, y, api.getWindow().getForegroundColor(), api.getWindow().getBackgroundColor());
+            api.getWindow().setCharColor(line, column, api.getWindow().getForegroundColor(), api.getWindow().getBackgroundColor());
         }
     }
 
@@ -35,10 +36,11 @@ public class Cursor implements Listener {
         // 38 -> up
         switch (event.getCode()) {
             case 39:
-                y += 1;
+                if (column < api.getWindow().getColumns()) column += 1;
+                break;
             case 37:
-                y -= 1;
-
+                if (column > 0) column -= 1;
+                break;
         }
     }
 }
