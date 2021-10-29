@@ -3,9 +3,8 @@ package com.alexsobiek.jbasic.program.interpreter;
 import com.alexsobiek.jbasic.API;
 import com.alexsobiek.jbasic.event.EventListener;
 import com.alexsobiek.jbasic.event.Listener;
-import com.alexsobiek.jbasic.event.events.CPUCycle;
+import com.alexsobiek.jbasic.event.events.ProcessorCycle;
 import com.alexsobiek.jbasic.event.events.KeyInputEvent;
-import com.alexsobiek.jbasic.memory.RAM;
 
 public class Cursor implements Listener {
     private int line = 0, column = 0;
@@ -18,7 +17,7 @@ public class Cursor implements Listener {
     }
 
     @EventListener
-    public void onTick(CPUCycle event) {
+    public void onTick(ProcessorCycle event) {
         cycle++;
         if (cycle == 2) {
             cycle = 0;

@@ -3,7 +3,7 @@ package com.alexsobiek.jbasic;
 import com.alexsobiek.jbasic.event.EventBus;
 import com.alexsobiek.jbasic.event.EventListener;
 import com.alexsobiek.jbasic.event.Listener;
-import com.alexsobiek.jbasic.event.events.CPUCycle;
+import com.alexsobiek.jbasic.event.events.ProcessorCycle;
 import com.alexsobiek.jbasic.graphics.Window;
 import com.alexsobiek.jbasic.io.IOHandler;
 import com.alexsobiek.jbasic.program.interpreter.BasicInterpreter;
@@ -53,7 +53,7 @@ class JMain implements API, Listener {
     }
 
     @EventListener
-    public void onCPUCycle(CPUCycle cycle) {
+    public void onCPUCycle(ProcessorCycle cycle) {
         window.paint(window.getGraphics());
     }
 
