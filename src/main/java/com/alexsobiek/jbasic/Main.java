@@ -4,8 +4,10 @@ import com.alexsobiek.jbasic.event.EventBus;
 import com.alexsobiek.jbasic.event.EventListener;
 import com.alexsobiek.jbasic.event.Listener;
 import com.alexsobiek.jbasic.event.events.ProcessorCycle;
+import com.alexsobiek.jbasic.graphics.ScreenMemory;
 import com.alexsobiek.jbasic.graphics.Window;
 import com.alexsobiek.jbasic.io.IOHandler;
+import com.alexsobiek.jbasic.memory.MemoryBus;
 import com.alexsobiek.jbasic.program.interpreter.BasicInterpreter;
 
 /**
@@ -16,6 +18,7 @@ import com.alexsobiek.jbasic.program.interpreter.BasicInterpreter;
 public class Main {
     /**
      * Main entry point for JBasic
+     *
      * @param args Startup arguments
      */
     public static void main(String[] args) {
@@ -30,6 +33,7 @@ public class Main {
 }
 
 class JMain implements API, Listener {
+    private final MemoryBus memoryBus;
     private final EventBus eventBus;    // Event bus handles posting, subscribing, and unsubscribing from events
     private final Window window;        // Main Window (JPanel) class
     private final IOHandler io;         // Main IO class
@@ -38,14 +42,23 @@ class JMain implements API, Listener {
      * Constructor for the main instance of JBasic
      */
     public JMain() {
+        memoryBus = new MemoryBus();
+        setupMemory();
         eventBus = new EventBus();
-        window = new Window(40, 25);    // Creates new 40x25 column Window
+        window = new Window(memoryBus);
         window.writeString(0, 0, "Loading Program...");
         io = new IOHandler(eventBus);
         new Clock(eventBus);
         eventBus.subscribe(this);
         window.clearScreen();
         loadProgram(new BasicInterpreter());
+    }
+
+    /**
+     * Adds all the "system" memory to the memory bus to be addressed
+     */
+    private void setupMemory() {
+        memoryBus.add(new ScreenMemory(40, 25));
     }
 
     public void loadProgram(Program program) {
@@ -58,7 +71,17 @@ class JMain implements API, Listener {
     }
 
     /**
-     * Gets the Event Bus class
+     * Returns the Memory Bus Object
+     *
+     * @return MemoryBus
+     */
+    public MemoryBus getMemoryBus() {
+        return memoryBus;
+    }
+
+    /**
+     * Gets the Event Bus Object
+     *
      * @return EventBus
      */
     @Override
@@ -68,6 +91,7 @@ class JMain implements API, Listener {
 
     /**
      * Gets the Window class
+     *
      * @return Window
      */
     @Override
@@ -77,6 +101,7 @@ class JMain implements API, Listener {
 
     /**
      * Gets the IO handler class
+     *
      * @return return IOHandler
      */
     @Override

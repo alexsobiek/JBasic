@@ -1,6 +1,6 @@
 package com.alexsobiek.jbasic.graphics;
 
-import com.alexsobiek.jbasic.memory.ScreenMemory;
+import com.alexsobiek.jbasic.memory.MemoryBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,14 +9,14 @@ import java.awt.*;
 public class Window extends JPanel {
 
     private final ScreenMemory memory;
-    private final int columns;
     private final int lines;
+    private final int columns;
     private final Color color;
 
-    public Window(int columns, int lines) {
-        memory = new ScreenMemory(columns, lines);
-        this.columns = columns;
-        this.lines = lines;
+    public Window(MemoryBus memoryBus) {
+        memory = (ScreenMemory) memoryBus.get((short)0).getMemoryObject(); // Get screen memory which starts at 0
+        this.lines = memory.peek((short)0);
+        this.columns = memory.peek((short)1);
         color = new Color();
         JFrame frame = new JFrame("JBasic");
         frame.setSize(640, 480); // VGA Resolution
@@ -24,9 +24,17 @@ public class Window extends JPanel {
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        memory.poke((short)0, (byte)0);     // Default Background Color
-        memory.poke((short)1, (byte)255);   // Default Foreground Color
+        memory.poke((short)2, (byte)0);     // Default Background Color
+        memory.poke((short)3, (byte)255);   // Default Foreground Color
         frame.setBackground(color.from(getBackgroundColor()));
+    }
+
+    /**
+     * Returns the size of the ScreenMemory block.
+     * Useful when needing to know the memory position of blocks after ScreenMemory.
+     */
+    public short getMemorySize() {
+        return (short) memory.size();
     }
 
     /**
@@ -46,11 +54,11 @@ public class Window extends JPanel {
     }
 
     public int getBackgroundColor() {
-        return memory.peek((short)0);
+        return memory.peek((short)2);
     }
 
     public int getForegroundColor() {
-        return memory.peek((short)1);
+        return memory.peek((short)3);
     }
 
 
@@ -109,9 +117,9 @@ public class Window extends JPanel {
      */
     public void writeChar(int line, int column, char character, int foreground, int background) {
         if (line < lines && column < columns) {
-            memory.poke((short)2, (byte)line);      // Write the last character line position to memory
-            memory.poke((short)3, (byte)column);    // Write the last character column position to memory
-            int address = 4 + (120*line) + (3*column);
+            memory.poke((short)4, (byte)line);      // Write the last character line position to memory
+            memory.poke((short)5, (byte)column);    // Write the last character column position to memory
+            int address = 6 + (120*line) + (3*column);
             memory.poke((short)address, (byte)character);       // Write the character to memory
             memory.poke((short)(address+1), (byte)foreground);  // Write the character foreground to memory
             memory.poke((short)(address+2), (byte)background);  // Write the character background to memory
@@ -127,7 +135,7 @@ public class Window extends JPanel {
     public char getCharAt(int line, int column) {
         char c = 0x00;
         if (line < this.lines && column < this.columns) {
-            int address = 4 + (120*line) + (3*column);
+            int address = 6 + (120*line) + (3*column);
             c = (char) memory.peek((short)address);
         }
         return c;
@@ -138,7 +146,7 @@ public class Window extends JPanel {
      * @return byte[]
      */
     public byte[] getLastCharInput() {
-        return new byte[]{memory.peek((short)2), memory.peek((short)3)};
+        return new byte[]{memory.peek((short)4), memory.peek((short)5)};
     }
 
     /**
@@ -161,7 +169,7 @@ public class Window extends JPanel {
     private byte[] getCharacterBytes(int line, int column) {
         // Each row occupies 75 bytes - character, foreground, background
         byte[] b = new byte[3];
-        int address = 4 + (120*line) + (3*column); // each column has 3 bytes
+        int address = 6 + (120*line) + (3*column); // each column has 3 bytes
         for (int i = 0; i < 3; i++) b[i] = memory.peek((short)(address+i));
         return b;
     }
