@@ -1,4 +1,4 @@
-package com.alexsobiek.jbasic.program.interpreter;
+package com.alexsobiek.jbasic.program.interpreter.graphics;
 
 import com.alexsobiek.jbasic.API;
 import com.alexsobiek.jbasic.event.EventListener;
@@ -8,7 +8,7 @@ import com.alexsobiek.jbasic.event.events.KeyInputEvent;
 import com.alexsobiek.jbasic.graphics.Character;
 
 public class Cursor implements Listener {
-    private int line = 0, column = 0;
+    private int line = 1, column = 0;
     private int lastLine = line, lastColumn = column;
     private byte cycle = 0;
     private Character selected;
@@ -30,7 +30,7 @@ public class Cursor implements Listener {
      * Moves the cursor by one in the direction specified
      * @param direction Direction to move
      */
-    void move(Direction direction) {
+    public void move(Direction direction) {
         switch(direction) {
             case UP:
                 if (line-1 >= 0) {
@@ -48,30 +48,40 @@ public class Cursor implements Listener {
                 if (column-1 >= 0) {
                     lastColumn = column;
                     column--;
+                } else {
+                    column = api.getWindow().getColumns()-1;
+                    move(Direction.UP);
                 }
                 break;
             case RIGHT:
                 if (column+1 < api.getWindow().getColumns()) {
                     lastColumn = column;
                     column++;
+                } else {
+                    column = 0;
+                    move(Direction.DOWN);
                 }
                 break;
         }
     }
 
+    void triggerMove() {
+        if (lastLine != line || lastColumn != column) {
+            api.getWindow().writeCharacter(selected); // Write the original character
+            lastLine = line;
+            lastColumn = column;
+            selected = api.getWindow().getCharAt(line, column);
+        }
+    }
+
     @EventListener
-    public void onTick(ProcessorCycle event) {
+    public void onProcessorCycle(ProcessorCycle event) {
         cycle++;
-        if (cycle > 50) {
+        if (cycle > 100) {
             api.getWindow().setCharColor(line, column, api.getWindow().getForegroundColor(), api.getWindow().getBackgroundColor());
             cycle = 0;
-        } else if (cycle > 25) {
-            if (lastLine != line || lastColumn != column) {
-                api.getWindow().writeCharacter(selected); // Write the original character
-                lastLine = line;
-                lastColumn = column;
-                selected = api.getWindow().getCharAt(line, column);
-            }
+        } else if (cycle > 50) {
+            triggerMove();
             api.getWindow().setCharColor(line, column, api.getWindow().getBackgroundColor(), api.getWindow().getForegroundColor());
         }
     }
